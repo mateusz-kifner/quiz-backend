@@ -1,17 +1,26 @@
-const http = require("http");
 const express = require("express");
 const bodyParser = require("body-parser");
 
 const app = express();
 
-const server = http.createServer(app);
-
-const port = process.env.PORT || 3000;
-
-// app.use(bodyParser.json());
-
-app.get("/", (req, res, next) => {
-  res.send("test node ");
+app.use((req, res, next) => {
+  res.status(200).json({ message: "test" });
 });
 
-server.listen(port);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTIONS") {
+    res.header(
+      "Access-Control-Allow-Methods",
+      "PUT , POST, PATCH, DELETE, GET"
+    );
+    return res.status(200).json({});
+  }
+  next();
+});
+
+module.exports = app;
