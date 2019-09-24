@@ -19,6 +19,7 @@ mongoose.connect(
 );
 
 app.use(morgan("dev"));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -41,6 +42,7 @@ app.use((req, res, next) => {
 const quizzesRoutes = require("./api/routes/quizzes");
 const usersRoutes = require("./api/routes/users");
 
+app.use("/images", express.static("images"));
 app.use("/quizzes", quizzesRoutes);
 app.use("/users", usersRoutes);
 
