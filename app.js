@@ -39,11 +39,9 @@ app.use((req, res, next) => {
 });
 
 const quizzesRoutes = require("./api/routes/quizzes");
-const scoresRoutes = require("./api/routes/scores");
 const usersRoutes = require("./api/routes/users");
 
 app.use("/quizzes", quizzesRoutes);
-app.use("/scores", scoresRoutes);
 app.use("/users", usersRoutes);
 
 app.use((req, res, next) => {

@@ -2,28 +2,22 @@ const Quizzes = require("../../models/quizzes");
 const error = require("../../error");
 
 module.exports = (req, res, next) => {
-    const id = req.params.userId;
+    const id = req.params.quizId;
     if (id) {
         Quizzes.findById(id)
-            .select("")
+            .select("-owner -answers")
             .exec()
             .then(data => {
                 if (data) {
                     res.status(200).json(data);
                 } else {
-                    res.status(404).json({
-                        error: { message: "Users with given Id not found" }
-                    });
+                    error("Quiz with given id does not exsists");
                 }
             })
-            .catch(err =>
-                res.status(500).json({
-                    error: err
-                })
-            );
+            .catch(err => error("action get failed"));
     } else {
         Quizzes.find()
-            .select("_id login")
+            .select("_id title description icon")
             .exec()
             .then(data => {
                 if (data) {
@@ -32,6 +26,6 @@ module.exports = (req, res, next) => {
                     error("Database Error");
                 }
             })
-            .catch(err => error("Database Error"));
+            .catch(err => error("action get failed"));
     }
 };

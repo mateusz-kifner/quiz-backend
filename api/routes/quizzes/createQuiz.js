@@ -1,5 +1,6 @@
-const Quizzes = require("../../models/quizzes");
+const Quiz = require("../../models/quizzes");
 const error = require("../../error");
+const mongoose = require("mongoose");
 
 module.exports = (req, res, next) => {
     const quiz = new Quiz({
@@ -14,6 +15,6 @@ module.exports = (req, res, next) => {
             });
         })
         .catch(err => {
-            return error("Quiz creation Error");
+            return error("action create failed");
         });
 };

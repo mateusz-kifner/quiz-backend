@@ -6,8 +6,9 @@ const quizSchema = mongoose.Schema({
     description: String,
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     icon_src: String,
-    question_count: 5,
-    questions: { type: Array }
+    question_count: Number,
+    questions: { type: Object },
+    answers: { type: Object }
 });
 
 module.exports = mongoose.model("Quiz", quizSchema);
