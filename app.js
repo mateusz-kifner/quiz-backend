@@ -2,17 +2,21 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const error = require("./api/error");
 
 const app = express();
+app.disable("x-powered-by");
+
 mongoose.connect(
     "mongodb+srv://quiz-database:" +
         process.env.MONGO_ATLAS_PW +
         "@cluster0-ocpnn.mongodb.net/test?retryWrites=true&w=majority",
-    { useNewUrlParser: true, useUnifiedTopology: true }
+    {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true
+    }
 );
-
-const quizzesRoutes = require("./api/routes/quizzes");
-const scoresRoutes = require("./api/routes/scores");
 
 app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -34,22 +38,37 @@ app.use((req, res, next) => {
     next();
 });
 
+const quizzesRoutes = require("./api/routes/quizzes");
+const scoresRoutes = require("./api/routes/scores");
+const usersRoutes = require("./api/routes/users");
+
 app.use("/quizzes", quizzesRoutes);
 app.use("/scores", scoresRoutes);
+app.use("/users", usersRoutes);
 
 app.use((req, res, next) => {
-    const error = new Error("Not found");
-    error.status = 404;
-    next(error);
+    next(error("Not found"), 404);
 });
 
 app.use((err, req, res, next) => {
     res.status(err.status || 500);
-    res.json({
-        error: {
-            message: err.message
-        }
-    });
+    if (
+        err.data == undefined ||
+        (err.data.constructor === Object && Object.keys(err.data).length === 0)
+    ) {
+        res.json({
+            error: {
+                message: err.message
+            }
+        });
+    } else {
+        res.json({
+            error: {
+                message: err.message,
+                data: err.data
+            }
+        });
+    }
 });
 
 module.exports = app;
