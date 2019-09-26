@@ -42,7 +42,10 @@ module.exports.permission = (permissonMask = 0b1111, permissionCode = 0) => {
         try {
             let token = req.headers.authorization.split(" ")[1];
             for (blacklisted of blacklist) {
-                if (blacklisted === token) return error("Auth failed", 401);
+                if (blacklisted === token)
+                    return res
+                        .status(500)
+                        .json({ error: { message: "Auth failed" } });
             }
             req.userJWT = jwt.verify(token, process.env.JWT_KEY);
             req.userPermCode = Object.keys(permissions_hierarchy).find(
@@ -51,13 +54,15 @@ module.exports.permission = (permissonMask = 0b1111, permissionCode = 0) => {
             if (req.userPermCode >= permissionCode) {
                 req.userPermMask = permissions[req.userJWT.permission];
                 if (req.userPermMask & (permissonMask !== permissonMask))
-                    return error("Auth failed", 401);
+                    return res
+                        .status(500)
+                        .json({ error: { message: "Auth failed" } });
                 next();
             } else {
-                return error("Auth failed", 401);
+                res.status(500).json({ error: { message: "Auth failed" } });
             }
         } catch (err) {
-            return error("Auth failed", 401);
+            return res.status(500).json({ error: { message: "Auth failed" } });
         }
     };
 };
