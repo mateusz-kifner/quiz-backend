@@ -1,5 +1,4 @@
 const Quizzes = require("../../models/quizzes");
-const error = require("../../error");
 
 module.exports = (req, res, next) => {
     const id = req.params.quizId;
@@ -12,5 +11,5 @@ module.exports = (req, res, next) => {
         .then(data => {
             res.status(200).json(data);
         })
-        .catch(err => error("action patch quiz failed"));
+        .catch(err => next(err));
 };

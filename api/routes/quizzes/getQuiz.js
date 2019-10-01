@@ -1,20 +1,20 @@
 const Quizzes = require("../../models/quizzes");
-const error = require("../../error");
 
 module.exports = (req, res, next) => {
     const id = req.params.quizId;
     if (id) {
+        console.log(id);
         Quizzes.findById(id)
             .select("-owner -answers")
             .exec()
             .then(data => {
+                console.log(data);
                 if (data) {
                     res.status(200).json(data);
                 } else {
-                    error("Quiz with given id does not exsists");
                 }
             })
-            .catch(err => error("action get failed"));
+            .catch(err => next(err));
     } else {
         Quizzes.find()
             .select("_id title description icon")
@@ -23,9 +23,8 @@ module.exports = (req, res, next) => {
                 if (data) {
                     res.status(200).json(data);
                 } else {
-                    error("Database Error");
                 }
             })
-            .catch(err => error("action get failed"));
+            .catch(err => next(err));
     }
 };

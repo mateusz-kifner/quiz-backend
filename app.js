@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
-const error = require("./api/error");
 
 const app = express();
 app.disable("x-powered-by");
@@ -47,7 +46,8 @@ app.use("/quizzes", quizzesRoutes);
 app.use("/users", usersRoutes);
 
 app.use((req, res, next) => {
-    next(error("Not found"), 404);
+    const err = { message: "error" };
+    next(err);
 });
 
 app.use((err, req, res, next) => {

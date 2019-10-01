@@ -37,9 +37,7 @@ router.get(
                     } catch {}
                 }
             })
-            .catch(err => {
-                error("User not found");
-            });
+            .catch(err => next(err));
     }
 );
 

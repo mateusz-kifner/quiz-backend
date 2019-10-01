@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const Users = require("../../models/users");
-const error = require("../../error");
+
 const jwtAuth = require("../../middleware/jwt-auth");
 
 module.exports = (req, res, next) => {
@@ -24,13 +24,7 @@ module.exports = (req, res, next) => {
                     tokens.push(token);
                     Users.updateOne({ _id }, { tokens })
                         .exec()
-                        .catch(err => {
-                            error(
-                                "Auth failed, Could not add token to db",
-                                500,
-                                err
-                            );
-                        });
+                        .catch(err => next(err));
 
                     res.status(201).json({
                         message: "Auth succesful",
@@ -40,11 +34,10 @@ module.exports = (req, res, next) => {
                         permission
                     });
                 } else {
-                    next(error("Auth failed", 401));
+                    const err = { message: "error" };
+                    next(err);
                 }
             });
         })
-        .catch(err => {
-            next(error("Auth failed", 401));
-        });
+        .catch(err => next(err));
 };

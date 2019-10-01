@@ -1,5 +1,4 @@
 const Users = require("../../models/users");
-const error = require("../../error");
 
 module.exports = (req, res, next) => {
     const id = req.params.userId;
@@ -12,5 +11,5 @@ module.exports = (req, res, next) => {
         .then(data => {
             res.status(200).json(data);
         })
-        .catch(err => error("Could not update user", 500, err));
+        .catch(err => next(err));
 };

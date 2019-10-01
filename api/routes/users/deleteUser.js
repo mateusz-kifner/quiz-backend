@@ -1,5 +1,4 @@
 const Users = require("../../models/users");
-const error = require("../../error");
 
 module.exports = (req, res, next) => {
     const id = req.params.userId;

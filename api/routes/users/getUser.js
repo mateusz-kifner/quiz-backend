@@ -1,5 +1,4 @@
 const Users = require("../../models/users");
-const error = require("../../error");
 
 module.exports = (req, res, next) => {
     const id = req.params.userId;
@@ -16,11 +15,7 @@ module.exports = (req, res, next) => {
                     });
                 }
             })
-            .catch(err =>
-                res.status(500).json({
-                    error: err
-                })
-            );
+            .catch(err => next(err));
     } else {
         Users.find()
             .select("_id login")
@@ -29,9 +24,8 @@ module.exports = (req, res, next) => {
                 if (doc) {
                     res.status(200).json(doc);
                 } else {
-                    error("Database Error");
                 }
             })
-            .catch(err => error("Database Error"));
+            .catch(err => next(err));
     }
 };

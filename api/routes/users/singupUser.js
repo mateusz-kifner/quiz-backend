@@ -1,12 +1,11 @@
 const Users = require("../../models/users");
-const error = require("../../error");
+
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
 module.exports = (req, res, next) => {
     bcrypt.hash(req.body.password, 11, (err, hash) => {
         if (err) {
-            return error("Users creation Error");
         } else {
             const user = new Users({
                 _id: new mongoose.Types.ObjectId(),
@@ -23,9 +22,7 @@ module.exports = (req, res, next) => {
                         addedUsers: { login, _id }
                     });
                 })
-                .catch(err => {
-                    return error("Users creation Error");
-                });
+                .catch(err => next(err));
         }
     });
 };
