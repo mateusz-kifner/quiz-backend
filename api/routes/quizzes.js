@@ -7,7 +7,7 @@ const deleteQuiz = require("../routes/quizzes/deleteQuiz");
 const patchQuiz = require("../routes/quizzes/patchQuiz");
 const getQuiz = require("../routes/quizzes/getQuiz");
 
-router.get("/", getQuiz);
+router.get("/", jwtAuth.permission(), getQuiz);
 router.get("/:quizId", jwtAuth.permission(), getQuiz);
 router.post("/", jwtAuth.permission(), createQuiz);
 router.delete("/:quizId", jwtAuth.permission(), deleteQuiz);
