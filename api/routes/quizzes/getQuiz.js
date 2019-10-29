@@ -1,9 +1,6 @@
 const Quizzes = require("../../models/quizzes");
 
 module.exports = (req, res, next) => {
-  // res.setHeader("Set-Cookie", ["type=ninja", "language=javascript"]);
-
-  // console.log(req.headers);
   res.cookie("game_token", "DAGSJRER$#%@%@GDG$#%2352");
   res.clearCookie("cart");
   console.log(req.cookies);

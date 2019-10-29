@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 
@@ -22,10 +22,10 @@ app.use(morgan("dev"));
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cookieParser());
+// app.use(cookieParser());
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.header("Access-Control-Allow-Origin", "*");
   res.header(
     "Access-Control-Allow-Headers",
     "Origin, X-Requested-With, Content-Type, Accept, Authorization,Set-Cookie"
@@ -43,19 +43,16 @@ app.use((req, res, next) => {
 
 const quizzesRoutes = require("./api/routes/quizzes");
 const usersRoutes = require("./api/routes/users");
+const gameRoutes = require("./api/routes/game");
 
 app.use("/images", express.static("images"));
 app.use("/quizzes", quizzesRoutes);
 app.use("/users", usersRoutes);
-
-app.use((req, res, next) => {
-  const err = { message: "error" };
-  next(err);
-});
+app.use("/game", gameRoutes);
 
 app.use((err, req, res, next) => {
   console.log(err);
-  res.status(err.status || 500);
+  res.status(err.status || 500).json({ error: err });
   if (
     err.data == undefined ||
     (err.data.constructor === Object && Object.keys(err.data).length === 0)
